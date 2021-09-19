@@ -1,0 +1,44 @@
+name: Magalix
+
+on:
+  push:
+    branches: [ test ]
+
+# on:
+#   schedule:
+#   - cron:  '30 5,17 * * *'
+
+jobs:
+  run:
+    strategy:
+      matrix:
+        env:
+        - dev
+        - main
+    
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo ${{ matrix.env }} 
+
+  #   - name: checkout repository
+  #     uses: actions/checkout@v2
+  #   - name: Run Magalix Action
+  #     uses: magalixcorp/magalix-action@{{matrix.env}}
+  #     with:
+  #       webhook: ${{ matrix.env == main && secrets.PROD_GUARD || secrets.DEV_GUARD }}
+  #       export-result: result.json
+    
+  #   - name: Validate Results
+
+  # test:
+
+
+
+      # runs-on: ubuntu-latest
+    # steps:
+    # - uses: actions/checkout@v2
+    # - name: Magalix
+    #   uses: magalixcorp/magalix-action@main
+    #   with:
+    #     webhook: ${{ secrets.GUARD_WEBHOOK_ALL }}
+    #     auto-remediation: true
