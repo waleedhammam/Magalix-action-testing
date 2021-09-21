@@ -33,6 +33,7 @@ jobs:
       uses: magalixcorp/magalix-action@main
       with:
         webhook: ${{ secrets.PROD_GUARD }}
+        branch: ${{ matrix.branch }}
         export-to: result.json
 
     - name: Run Magalix Action 
@@ -40,6 +41,7 @@ jobs:
       uses: magalixcorp/magalix-action@dev
       with:
         webhook: ${{ secrets.DEV_GUARD }}
+        branch: ${{ matrix.branch }}
         export-to: result.json
 
     - name: 'Upload Result'
