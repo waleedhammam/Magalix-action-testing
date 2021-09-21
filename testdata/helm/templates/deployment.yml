@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-5
+  labels:
+    app: myapp-5
+spec:
+  selector:
+    matchLabels:
+      app: myapp-5
+  template:
+    metadata:
+      labels:
+        app: myapp-5
+    spec:
+      containers:
+        - name: container-1
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true

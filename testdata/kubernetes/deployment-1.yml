@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-1
+  labels:
+    app: myapp-1
+spec:
+  selector:
+    matchLabels:
+      app: myapp-1
+  template:
+    metadata:
+      labels:
+        app: myapp-1
+    spec:
+      containers:
+        # mglx:ignore
+        - name: container-1
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+        - name: container-2
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+        - name: container-3
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+---
+# mglx:ignore
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-2
+  labels:
+    app: myapp-2
+spec:
+  selector:
+    matchLabels:
+      app: myapp-2
+  template:
+    metadata:
+      labels:
+        app: myapp-2
+    spec:
+      containers:
+        - name: container-1
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-3
+  labels:
+    app: myapp-3
+spec:
+  selector:
+    matchLabels:
+      app: myapp-3
+  template:
+    metadata:
+      labels:
+        app: myapp-3
+    spec:
+      containers:
+        - name: container-1
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true # mglx:ignore

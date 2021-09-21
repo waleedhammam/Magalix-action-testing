@@ -1,44 +1,58 @@
 name: Magalix
 
 on:
-  push:
-    branches: [ test ]
-
-# on:
-#   schedule:
-#   - cron:  '30 5,17 * * *'
+  schedule:
+  - cron: 0 0 * * *
 
 jobs:
   run:
     strategy:
       matrix:
-        env:
+        branch:
         - dev
         - main
     
     runs-on: ubuntu-latest
     steps:
-    - run: echo ${{ matrix.env }} 
 
-  #   - name: checkout repository
-  #     uses: actions/checkout@v2
-  #   - name: Run Magalix Action
-  #     uses: magalixcorp/magalix-action@{{matrix.env}}
-  #     with:
-  #       webhook: ${{ matrix.env == main && secrets.PROD_GUARD || secrets.DEV_GUARD }}
-  #       export-result: result.json
+    - name: Clean up Auto Remediation PRs
+      uses: actions/stale@v4
+      with:
+        days-before-stale: 0.5
+        days-before-close: 0.5
+        delete-branch: true
+        
+    - name: checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.branch }}
+  
+    - name: Run Magalix Action 
+      if: ${{ matrix.branch == 'main' }}
+      uses: magalixcorp/magalix-action@main
+      with:
+        webhook: ${{ secrets.PROD_GUARD }}
+        export-to: result.json
+
+    - name: Run Magalix Action 
+      if: ${{ matrix.branch == 'dev' }}
+      uses: magalixcorp/magalix-action@dev
+      with:
+        webhook: ${{ secrets.DEV_GUARD }}
+        export-to: result.json
+
+    - name: 'Upload Result'
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: result.json
+        path: result.json
+        retention-days: 7
     
-  #   - name: Validate Results
-
-  # test:
-
-
-
-      # runs-on: ubuntu-latest
-    # steps:
-    # - uses: actions/checkout@v2
-    # - name: Magalix
-    #   uses: magalixcorp/magalix-action@main
-    #   with:
-    #     webhook: ${{ secrets.GUARD_WEBHOOK_ALL }}
-    #     auto-remediation: true
+    - name: Validate Results
+      if: ${{ always() }}
+      run: python3 tests.py 
+      env:
+        ENVIRONMENT_BRANCH: ${{ matrix.branch }}
+        SLACK_DEV_CHANNEL: ${{ secrets.SLACK_DEV_CHANNEL }}
+        SLACK_PRD_CHANNEL: ${{ secrets.SLACK_PRD_CHANNEL }}
