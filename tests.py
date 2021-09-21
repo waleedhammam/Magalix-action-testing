@@ -31,5 +31,6 @@ if __name__ == "__main__":
         run_tests(result)
     except:
         is_passed = False
+        raise
     finally:
         send_slack_message(BRANCH, SLACK_CHANNEL, is_passed)
