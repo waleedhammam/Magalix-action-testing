@@ -12,7 +12,7 @@ def send_slack_message(branch: str, slack_channel: str, is_passed: bool):
         "type": "mrkdwn",
         "attachments": [
             {
-                "title": "Github Action E2E Test",
+                "title": "E2E Violations Prevention Test",
                 "fields": [{"title": "Branch", "value": branch}],
                 "color": "good" if is_passed else "danger",
             }
