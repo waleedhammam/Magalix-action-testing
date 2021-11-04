@@ -8,6 +8,9 @@ on:
       branch:
         description: branch name
         required: true
+      expected:
+        description: expected results
+        required: true
 
 jobs:
   run:
@@ -43,9 +46,12 @@ jobs:
         export-to: result.json
 
     - name: 'Upload Result'
-      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: result.json
         path: result.json
         retention-days: 7
+
+    - name: Validate Results
+      run: python3 e2e.py ${{ github.event.inputs.expected }}
+  
