@@ -26,7 +26,7 @@ jobs:
         ref: ${{ github.event.inputs.branch }}
   
     - name: Run Magalix Action 
-      if: ${{ matrix.branch == 'main' }}
+      if: ${{ github.event.inputs.branch == 'main' }}
       uses: magalixcorp/magalix-action@main
       with:
         webhook: ${{ github.event.inputs.guard }}
@@ -34,7 +34,7 @@ jobs:
         export-to: result.json
 
     - name: Run Magalix Action 
-      if: ${{ matrix.branch == 'dev' }}
+      if: ${{ github.event.inputs.branch == 'dev' }}
       uses: magalixcorp/magalix-action@dev
       with:
         webhook: ${{ github.event.inputs.guard }}
