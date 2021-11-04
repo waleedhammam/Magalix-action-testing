@@ -1,0 +1,43 @@
+name: E2E Test
+
+on:
+  workflow_dispatch:
+   inputs:
+      guard:
+        description: guard url    
+        required: true
+      branch:
+        description: branch name
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clean up Auto Remediation PRs
+      uses: actions/stale@v4
+      with:
+        days-before-stale: 0.5
+        days-before-close: 0.5
+        delete-branch: true
+        
+    - name: checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}
+  
+    - name: Run Magalix Action 
+      if: ${{ matrix.branch == 'main' }}
+      uses: magalixcorp/magalix-action@main
+      with:
+        webhook: ${{ github.event.inputs.guard }}
+        branch: ${{ github.event.inputs.branch }}
+        export-to: result.json
+
+    - name: Run Magalix Action 
+      if: ${{ matrix.branch == 'dev' }}
+      uses: magalixcorp/magalix-action@dev
+      with:
+        webhook: ${{ github.event.inputs.guard }}
+        branch: ${{ github.event.inputs.branch }}
+        export-to: result.json
