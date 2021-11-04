@@ -39,4 +39,13 @@ jobs:
       with:
         webhook: ${{ github.event.inputs.guard }}
         branch: ${{ github.event.inputs.branch }}
+        no-exit-error: true
         export-to: result.json
+
+    - name: 'Upload Result'
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: result.json
+        path: result.json
+        retention-days: 7
