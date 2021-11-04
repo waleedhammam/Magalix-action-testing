@@ -1,5 +1,4 @@
-name: E2E Test
-
+name: e2e_test
 on:
   workflow_dispatch:
    inputs:
