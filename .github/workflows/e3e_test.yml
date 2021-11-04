@@ -53,5 +53,5 @@ jobs:
         retention-days: 7
 
     - name: Validate Results
-      run: python3 e2e.py ${{ github.event.inputs.expected }}
+      run: python3 e2e.py '${{ github.event.inputs.expected }}'
   
