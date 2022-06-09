@@ -40,7 +40,7 @@ jobs:
       if: ${{ matrix.branch == 'dev' }}
       uses: magalixcorp/magalix-action@dev
       with:
-        webhook: ${{ secrets.DEV_GUARD }}
+        webhook: 'https://console.aws.dev.magalix.com/api/v1/kubeguard/866df433-d02d-433c-82eb-8f47475506be/75b1cde0-c730-4da8-a2ed-bbe65eaa429b'
         branch: ${{ matrix.branch }}
         export-to: result.json
 
