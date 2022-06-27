@@ -21,11 +21,11 @@ spec:
             allowPrivilegeEscalation: true
         - name: container-2
           securityContext:
-            privileged: true
+            privileged: false
             allowPrivilegeEscalation: true
         - name: container-3
           securityContext:
-            privileged: true
+            privileged: false
             allowPrivilegeEscalation: true
 ---
 # mglx:ignore
@@ -68,5 +68,6 @@ spec:
       containers:
         - name: container-1
           securityContext:
-            privileged: true
+            privileged: false
             allowPrivilegeEscalation: true # mglx:ignore
+
