@@ -35,8 +35,9 @@ jobs:
         webhook: ${{ secrets.PROD_GUARD }}
         branch: ${{ matrix.branch }}
         export-to: result.json
+      
 
-    - name: Run Magalix Action 
+    - name: Run Magalix Action Dev
       if: ${{ matrix.branch == 'dev' }}
       uses: magalixcorp/magalix-action@dev
       with:
