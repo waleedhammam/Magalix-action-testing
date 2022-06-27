@@ -33,4 +33,4 @@ if __name__ == "__main__":
         is_passed = False
         raise
     finally:
-        send_slack_message(BRANCH, SLACK_CHANNEL, is_passed)
+        print(BRANCH, SLACK_CHANNEL, is_passed)

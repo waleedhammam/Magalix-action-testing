@@ -2,20 +2,17 @@ name: Magalix
 
 on:
   workflow_dispatch:
-  schedule:
-  - cron: 0 0 * * *
+    inputs:
+      branch:
+        description: branch name  
+        required: true
+    schedule:
+    - cron: 0 0 * * *
 
 jobs:
-  run:
-    strategy:
-      matrix:
-        branch:
-        - dev
-        - main
-    
+  run:   
     runs-on: ubuntu-latest
     steps:
-
     - name: Clean up Auto Remediation PRs
       uses: actions/stale@v4
       with:
@@ -26,29 +23,29 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v2
       with:
-        ref: ${{ matrix.branch }}
+        ref: ${{ github.event.inputs.branch }}
   
     - name: Run Magalix Action 
-      if: ${{ matrix.branch == 'main' }}
+      if: ${{ github.event.inputs.branch == 'main' }}
       uses: magalixcorp/magalix-action@main
       with:
         webhook: ${{ secrets.PROD_GUARD }}
-        branch: ${{ matrix.branch }}
+        branch: ${{ github.event.inputs.branch }}
         export-to: result.json
 
-    - name: Run Magalix Action 
-      if: ${{ matrix.branch == 'dev' }}
+    - name: Run Magalix Action
+      if: ${{ github.event.inputs.branch == 'dev' }}
       uses: magalixcorp/magalix-action@dev
       with:
         webhook: ${{ secrets.DEV_GUARD }}
-        branch: ${{ matrix.branch }}
+        branch: ${{ github.event.inputs.branch }}
         export-to: result.json
 
     - name: 'Upload Result'
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: result-${{ matrix.branch }}.json
+        name: result-${{ github.event.inputs.branch }}.json
         path: result.json
         retention-days: 7
     
@@ -56,6 +53,7 @@ jobs:
       if: ${{ always() }}
       run: python3 tests.py 
       env:
-        ENVIRONMENT_BRANCH: ${{ matrix.branch }}
+        ENVIRONMENT_BRANCH: ${{ github.event.inputs.branch }}
         SLACK_DEV_CHANNEL: ${{ secrets.SLACK_DEV_CHANNEL }}
         SLACK_PRD_CHANNEL: ${{ secrets.SLACK_PRD_CHANNEL }}
+        
