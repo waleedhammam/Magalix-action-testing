@@ -17,6 +17,6 @@ spec:
         - name: container-1
           image: ubuntu
           securityContext:
-            privileged: true
+            privileged: false
             allowPrivilegeEscalation: true
 
